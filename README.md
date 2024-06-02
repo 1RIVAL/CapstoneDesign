@@ -1,2 +1,0 @@
-# CapstoneDesign
-CapstoneDesign-MediapieUnity
