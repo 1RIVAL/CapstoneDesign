@@ -6,7 +6,7 @@ public class HandTracking : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public UDPReceive udpReceive;
+    public UDPTCPReceive udptcpReceive;
     public GameObject[] handPoints;
 
     void Start()
@@ -18,7 +18,7 @@ public class HandTracking : MonoBehaviour
     void Update()
     {
         // UDP 프로토콜로 전송된 데이터를 받아온다.
-        string data = udpReceive.data;
+        string data = udptcpReceive.data;
 
         // 가지고 온 데이터에서 대괄호([ ])를 뺀다.
         data = data.Remove(0, 1);
