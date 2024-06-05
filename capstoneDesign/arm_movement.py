@@ -22,13 +22,13 @@ udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 udp_serverAddressPort = ("127.0.0.1", 5052)
 print("UDP port 5052...")
 
-# 계산 변수
-counter = 0 # 수행 횟수
-stage = None # DOWN or UP
-
 # 클라이언트 연결 대기
 tcp_client_socket, tcp_client_address = tcp_server_socket.accept()
 print(f"TCP Connection from: {tcp_client_address}")
+
+# 계산 변수
+counter = 0 # 수행 횟수
+stage = None # DOWN or UP
 
 # 각도 구하기
 def calculate_angle(a,b,c):
@@ -64,8 +64,7 @@ with mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5) as p
 
         # Extract Landmarks
         try:
-            if results.pose_landmarks:
-                landmarks = results.pose_landmarks.landmark
+            landmarks = results.pose_landmarks.landmark
 
             # Get coordinates
             shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
@@ -76,9 +75,9 @@ with mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5) as p
             angle = calculate_angle(shoulder, elbow, wrist)
 
             # Visualize angle
-            cv2.putText(image, str(angle),
-                        tuple(np.multiply(elbow, [640, 480]).astype(int)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
+            # cv2.putText(image, str(angle),
+            #             tuple(np.multiply(elbow, [640, 480]).astype(int)),
+            #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
 
             # Curl counter logic
             if angle > 160 :
@@ -88,8 +87,8 @@ with mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5) as p
                 counter += 1
                 print(counter)
 
-                # 랜드마크 값들을 UDP 프로토콜을 사용하여 Unity에 보냄.
-                udp_socket.sendto(str.encode(str(counter)), udp_serverAddressPort)
+            # UDP를 통해 counter 값 전송
+            udp_socket.sendto(str(counter).encode(), udp_serverAddressPort)
 
 
         except Exception as e:
@@ -98,7 +97,7 @@ with mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5) as p
 
         # Render curl counter
         # Setup status box
-        cv2.rectangle(image, (0,0), (225, 73), (245,117,16), -1)
+        cv2.rectangle(image, (0,0), (280, 73), (245,117,16), -1)
 
         # Rep data
         cv2.putText(image, 'count', (15,12),
@@ -108,10 +107,10 @@ with mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5) as p
                     cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
 
         # Rep data
-        cv2.putText(image, 'stage', (65,12),
+        cv2.putText(image, 'stage', (115,12),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 1, cv2.LINE_AA)
         cv2.putText(image, stage,
-                    (60, 60),
+                    (110, 60),
                     cv2.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
 
         # Render detection
