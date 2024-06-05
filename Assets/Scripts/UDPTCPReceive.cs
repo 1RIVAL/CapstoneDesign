@@ -30,7 +30,7 @@ public class UDPTCPReceive : MonoBehaviour
 
     public GameObject playWorkout; // UI 오브젝트
     public string data; // 데이터 저장 변수
-    public int counter;
+    public int counter; // 횟수 저장 변수
     public bool printToConsole = false; // 데이터 콘솔 출력 여부
 
     void Start()

@@ -9704,6 +9704,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 2065182105}
+  udptcpReceive: {fileID: 1133343460}
+  back: {fileID: 87018939}
+  popcorn: {fileID: 2035233327}
+  corn: {fileID: 837989057}
+  good: 0
+  aimCounter: 0
 --- !u!114 &1785476544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11335,9 +11341,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 50
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
