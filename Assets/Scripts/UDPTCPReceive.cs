@@ -86,7 +86,11 @@ public class UDPTCPReceive : MonoBehaviour
                     IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                     byte[] dataByte = udpClient.Receive(ref anyIP);
                     //data = Encoding.UTF8.GetString(dataByte);
-                    counter = int.Parse(Encoding.UTF8.GetString(dataByte)); // UDP로 전송된 counter 값 업데이트
+
+                    lock (lockObject)
+                    {
+                        counter = int.Parse(Encoding.UTF8.GetString(dataByte)); // UDP로 전송된 counter 값 업데이트
+                    }
 
                     if (printToConsole) { print(counter); }
 
