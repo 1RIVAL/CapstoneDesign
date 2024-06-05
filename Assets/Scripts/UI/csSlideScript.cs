@@ -23,7 +23,7 @@ public class csSlideScript : MonoBehaviour
         //temperature = 5;
         //temperatureMax = 10;
 
-        aimCounter = 10;
+        aimCounter = 5;
     }
 
     // Start is called before the first frame update
