@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class csSlideScript : MonoBehaviour
 {
     public Slider slider; // 슬라이더
-    public UDPTCPReceive udptcpReceive; 
+    public TCPReceive tcpReceive; 
     public Button back; 
     public GameObject popcorn;
     public GameObject corn;
@@ -45,7 +45,7 @@ public class csSlideScript : MonoBehaviour
     {
         Debug.Log("go back");
         // 목표 달성 X
-        if (!good && udptcpReceive.counter < aimCounter)
+        if (!good && tcpReceive.counter < aimCounter)
         {
             slider.value += slider.maxValue / aimCounter;
             if (slider.value >= slider.maxValue)
@@ -57,7 +57,7 @@ public class csSlideScript : MonoBehaviour
         }
 
         // 목표 달성 O
-        else if (!good && udptcpReceive.counter >= aimCounter)
+        else if (!good && tcpReceive.counter >= aimCounter)
         {
            
             slider.value -= slider.maxValue / aimCounter;

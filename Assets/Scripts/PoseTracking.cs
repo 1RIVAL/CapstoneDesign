@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PoseTracking : MonoBehaviour
 {
-    public UDPTCPReceive udptcpReceive;
+    public TCPReceive tcpReceive;
     public GameObject[] posePoints;
   
     void Start()
@@ -15,7 +15,7 @@ public class PoseTracking : MonoBehaviour
     void Update()
     {
         // UDP 프로토콜로 전송된 데이터를 받아온다.
-        string data = udptcpReceive.data;
+        string data = tcpReceive.data;
 
         // 가지고 온 데이터에서 대괄호([ ])를 뺀다.
         data = data.Remove(0, 1);

@@ -2059,7 +2059,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playWorkout: {fileID: 1137780172}
-  udptcpReceive: {fileID: 1133343460}
+  tcpReceive: {fileID: 1133343460}
 --- !u!1 &480213236
 GameObject:
   m_ObjectHideFlags: 0
@@ -6103,11 +6103,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverIP: 127.0.0.1
   tcpServerPort: 8080
-  udpServerPort: 5052
   playWorkout: {fileID: 1137780172}
-  data: 
   counter: 0
   printToConsole: 0
+  data: 
 --- !u!1 &1137780172
 GameObject:
   m_ObjectHideFlags: 0
@@ -9704,7 +9703,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 2065182105}
-  udptcpReceive: {fileID: 1133343460}
+  tcpReceive: {fileID: 1133343460}
   back: {fileID: 87018939}
   popcorn: {fileID: 2035233327}
   corn: {fileID: 837989057}

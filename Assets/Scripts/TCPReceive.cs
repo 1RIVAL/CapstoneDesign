@@ -4,34 +4,28 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using UnityEngine.UI;
-using System.Text;
 
-
-public class UDPTCPReceive : MonoBehaviour
+public class TCPReceive : MonoBehaviour
 {
     private Thread receiveThread; // 데이터 수신 스레드
-
     private TcpClient tcpClient; // TCP 클라이언트
-    private UdpClient udpClient; // UDP 클라이언트 
-
     private NetworkStream stream; // 서버로부터 데이터 읽기 위한 네트워크 스트림
-   
+
     private Texture2D texture; // 수신 이미지 표시 텍스쳐
     private byte[] receivedImageBytes; // 수신 이미지 저장 버퍼
     private bool newDataReceived = false; // 새로운 데이터 수신 유무 플래그
 
     public string serverIP = "127.0.0.1"; // 서버 IP 주소
     public int tcpServerPort = 8080; // TCP 포트 번호
-    public int udpServerPort = 5052; // UDP 포트 번호
 
     private bool startReceiving = true; // 데이터 수신 여부 제어 플래그
 
     private object lockObject = new object(); // 스레드 동기화 위한 잠금 객체
 
     public GameObject playWorkout; // UI 오브젝트
-    public string data; // 데이터 저장 변수
     public int counter; // 횟수 저장 변수
     public bool printToConsole = false; // 데이터 콘솔 출력 여부
+    public string data;
 
     void Start()
     {
@@ -53,47 +47,41 @@ public class UDPTCPReceive : MonoBehaviour
             stream = tcpClient.GetStream();
             byte[] lengthBuffer = new byte[8]; // 들어오는 데이터 길이 저장 버퍼
 
-            udpClient = new UdpClient(udpServerPort);
-
             while (startReceiving)
             {
                 try
                 {
-                    // TCP 데이터 수신
+                    // 이미지 데이터 길이 수신
                     int bytesRead = stream.Read(lengthBuffer, 0, lengthBuffer.Length);
                     if (bytesRead == 0) break; // 데이터 읽히지 않으면 루프 종료
 
-                    long dataLength = BitConverter.ToInt64(lengthBuffer, 0);  // 길이 버퍼를 long으로 변환
-                    byte[] dataBuffer = new byte[dataLength]; // 들어오는 데이터 저장 버퍼 생성
+                    long imageLength = BitConverter.ToInt64(lengthBuffer, 0);  // 길이 버퍼를 long으로 변환
+                    byte[] imageDataBuffer = new byte[imageLength]; // 들어오는 이미지 데이터 저장 버퍼 생성
                     int totalRead = 0;
 
-                    // 버퍼에 데이터 읽어오기
-                    while (totalRead < dataLength)
+                    // 버퍼에 이미지 데이터 읽어오기
+                    while (totalRead < imageLength)
                     {
-                        bytesRead = stream.Read(dataBuffer, totalRead, dataBuffer.Length - totalRead);
+                        bytesRead = stream.Read(imageDataBuffer, totalRead, imageDataBuffer.Length - totalRead);
                         if (bytesRead == 0) break; // 데이터 읽히지 않으면 루프 종료
                         totalRead += bytesRead; // 총 읽은 바이트 수 업데이트
                     }
 
-                    // 객체 잠그고 수신된 이미지 바이트 업데이트
+                    // counter 값 수신
+                    bytesRead = stream.Read(lengthBuffer, 0, lengthBuffer.Length);
+                    if (bytesRead == 0) break; // 데이터 읽히지 않으면 루프 종료
+
+                    long counterValue = BitConverter.ToInt64(lengthBuffer, 0);
+
+                    // 객체 잠그고 수신된 이미지 바이트 및 counter 값 업데이트
                     lock (lockObject)
                     {
-                        receivedImageBytes = dataBuffer;
+                        receivedImageBytes = imageDataBuffer;
+                        counter = (int)counterValue;
                         newDataReceived = true; // 새로운 데이터 수신되었음을 나타내는 플래그 설정
                     }
 
-                    // UDP 데이터 수신
-                    IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
-                    byte[] dataByte = udpClient.Receive(ref anyIP);
-                    //data = Encoding.UTF8.GetString(dataByte);
-
-                    lock (lockObject)
-                    {
-                        counter = int.Parse(Encoding.UTF8.GetString(dataByte)); // UDP로 전송된 counter 값 업데이트
-                    }
-
                     if (printToConsole) { print(counter); }
-
                 }
                 catch (Exception e)
                 {
@@ -107,13 +95,11 @@ public class UDPTCPReceive : MonoBehaviour
             Debug.LogError("ReceiveData 초기화에서 오류 발생: " + e.ToString());
             startReceiving = false; // 오류 발생 시 데이터 수신 중지
         }
-
         finally
         {
             // 리소스 정리
             if (stream != null) stream.Close();
             if (tcpClient != null) tcpClient.Close();
-            if (udpClient != null) udpClient.Close();
         }
     }
 
@@ -163,6 +149,5 @@ public class UDPTCPReceive : MonoBehaviour
             receiveThread.Join(); // 수신 스레드 종료될 때까지 대기
         if (stream != null) stream.Close(); // 네트워크 스트림 닫기
         if (tcpClient != null) tcpClient.Close(); // TCP 클라이언트 닫기
-        if (udpClient != null) udpClient.Close(); // UDP 클라이언트 닫기
     }
 }

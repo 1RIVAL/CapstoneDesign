@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class csWorkout : MonoBehaviour
 {
     public GameObject playWorkout;
-    public UDPTCPReceive udptcpReceive;
+    public TCPReceive tcpReceive;
 
     // Start is called before the first frame update
     void Start()
@@ -16,9 +16,9 @@ public class csWorkout : MonoBehaviour
         Button buttonWorkout = GetComponent<Button>();
         buttonWorkout.onClick.AddListener(OnButtonClick);
 
-        if (udptcpReceive != null) 
+        if (tcpReceive != null) 
         {
-            udptcpReceive.playWorkout = playWorkout;
+            tcpReceive.playWorkout = playWorkout;
         }
 
         else
